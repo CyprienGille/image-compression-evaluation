@@ -15,26 +15,15 @@ def tensor_entropy(tensor):
 
 
 def get_valid_input(img_ref_path, img_comp_path):
-    try:
-        img_ref = io.imread(img_ref_path)
-    except FileNotFoundError:
-        print(f"Cannot find {img_ref_path}")
-        raise FileNotFoundError
-    try:
-        img_comp = io.imread(img_comp_path)
-    except FileNotFoundError:
-        print(f"Found {img_ref_path}, but cannot find {img_comp_path}")
-        raise FileNotFoundError
+    img_ref = io.imread(img_ref_path)
+    img_comp = io.imread(img_comp_path)
 
-    try:
-        s_ref = img_ref.shape
-        s_comp = img_comp.shape
-        assert s_ref == s_comp
-    except AssertionError:
-        print(
-            f"Images {img_ref_path}({s_ref}) and {img_ref_path}({s_ref}) have different shapes."
+    s_ref = img_ref.shape
+    s_comp = img_comp.shape
+    if s_ref != s_comp:
+        raise ValueError(
+            f"Images {img_ref_path}({s_ref}) and {img_comp_path}({s_comp}) have different shapes."
         )
-        raise ValueError
 
     yuv1 = cv2.cvtColor(img_ref, cv2.COLOR_RGB2YCrCb)
     yuv1[:, :, 1], yuv1[:, :, 2] = yuv1[:, :, 2], yuv1[:, :, 1]
