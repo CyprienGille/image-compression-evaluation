@@ -86,7 +86,7 @@ if __name__ == "__main__":
         "trainComp_100_0.0_Flickr_initial",
         "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
     ]
-    quantization_bits = [2, 4, 8, 16]
+    quantization_bits = [2, 3, 4, 6, 8, 10, 16]
 
     model_dir = "./trained_models"
     img_dir = "./datasets/kodak"
