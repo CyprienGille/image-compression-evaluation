@@ -97,8 +97,8 @@ if __name__ == "__main__":
 
     plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
 
-    bitrate_points, psnr_points, mssim_points = [], [], []
     for model_name in all_models:
+        bitrate_points, psnr_points, mssim_points = [], [], []
         model_path = f"{model_dir}/{model_name}/checkpoint/best_model.pth"
         model = CAE()
         model.load_state_dict(torch.load(model_path)["model_state_dict"])
