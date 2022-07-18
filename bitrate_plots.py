@@ -77,7 +77,8 @@ def get_data_point(
 
 
 if __name__ == "__main__":
-    pathlib.PosixPath = pathlib.WindowsPath  # to use models trained on linux
+    if os.name != "posix":
+        pathlib.PosixPath = pathlib.WindowsPath  # to use models trained on linux
 
     PLOTS_DIR = "./plots/"
     os.makedirs(PLOTS_DIR, exist_ok=True)
@@ -101,7 +102,9 @@ if __name__ == "__main__":
         bitrate_points, psnr_points, mssim_points = [], [], []
         model_path = f"{model_dir}/{model_name}/checkpoint/best_model.pth"
         model = CAE()
-        model.load_state_dict(torch.load(model_path)["model_state_dict"])
+        model.load_state_dict(
+            torch.load(model_path, map_location=DEVICE)["model_state_dict"]
+        )
         model.eval()
         model = model.to(DEVICE)
 
