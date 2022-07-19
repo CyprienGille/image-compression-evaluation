@@ -14,6 +14,8 @@ import matplotlib.pyplot as plt
 import os
 from tqdm import tqdm
 
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"  # fix OpenMP duplicate issues
+
 
 def get_data_point(
     model,
