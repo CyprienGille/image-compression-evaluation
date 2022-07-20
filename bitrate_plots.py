@@ -3,6 +3,7 @@ from lib.data_utils import KodakFolder
 from lib.measures import PSNR, SSIM, tensor_entropy
 from lib.tensor_utils import quantize_tensor, dequantize_tensor
 from models.cae_32x32x32_zero_pad_comp import CAE
+from models.cae_lightning import LightningCAE
 
 import numpy as np
 import torch
@@ -86,6 +87,7 @@ if __name__ == "__main__":
     os.makedirs(PLOTS_DIR, exist_ok=True)
 
     all_models = [
+        "trainComp_100_0.0_Lightning_initial",
         "trainComp_100_0.0_Flickr_initial",
         "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
     ]
@@ -103,10 +105,16 @@ if __name__ == "__main__":
     for model_name in all_models:
         bitrate_points, psnr_points, mssim_points = [], [], []
         model_path = f"{model_dir}/{model_name}/checkpoint/best_model.pth"
-        model = CAE()
-        model.load_state_dict(
-            torch.load(model_path, map_location=DEVICE)["model_state_dict"]
-        )
+        if model_name.find("Lightning"):
+            model = LightningCAE()
+            model.load_state_dict(
+                torch.load(model_path, map_location=DEVICE)["state_dict"]
+            )
+        else:
+            model = CAE()
+            model.load_state_dict(
+                torch.load(model_path, map_location=DEVICE)["model_state_dict"]
+            )
         model.eval()
         model = model.to(DEVICE)
 
