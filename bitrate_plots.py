@@ -105,7 +105,7 @@ if __name__ == "__main__":
     for model_name in all_models:
         bitrate_points, psnr_points, mssim_points = [], [], []
         model_path = f"{model_dir}/{model_name}/checkpoint/best_model.pth"
-        if model_name.find("Lightning"):
+        if model_name.find("Lightning") != 1:
             model = LightningCAE()
             model.load_state_dict(
                 torch.load(model_path, map_location=DEVICE)["state_dict"]
