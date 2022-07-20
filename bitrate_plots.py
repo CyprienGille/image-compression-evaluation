@@ -127,9 +127,9 @@ if __name__ == "__main__":
             mssim_points.append(mssim)
 
         plt.subplot(1, 2, 1)
-        plt.plot(bitrate_points, psnr_points, label=model_name)
+        plt.plot(bitrate_points, psnr_points, label=model_name, marker="x")
         plt.subplot(1, 2, 2)
-        plt.plot(bitrate_points, mssim_points, label=model_name)
+        plt.plot(bitrate_points, mssim_points, label=model_name, marker="x")
 
     plt.subplot(1, 2, 1)
     plt.xlabel("Bitrate (bpp)")
