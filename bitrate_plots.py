@@ -87,7 +87,7 @@ if __name__ == "__main__":
     os.makedirs(PLOTS_DIR, exist_ok=True)
 
     all_models = [
-        "trainComp_100_0.0_Lightning_initial",
+        "trainComp_200_0.0_Lightning_initial",
         "trainComp_100_0.0_Flickr_initial",
         "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
     ]
@@ -138,5 +138,8 @@ if __name__ == "__main__":
     plt.xlabel("Bitrate (bpp)")
     plt.ylabel("MSSIM")
     plt.legend()
+    plt.savefig(
+        "plots/PSNR_MSSIM_bpp.png", dpi=400, facecolor="white", bbox_inches="tight"
+    )
     plt.show()
 
