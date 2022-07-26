@@ -5,6 +5,8 @@ from PIL import Image
 import torch as T
 from torch.utils.data import Dataset
 
+from torchvision.transforms.functional import to_tensor
+
 
 class KodakFolder(Dataset):
     """
@@ -38,6 +40,33 @@ class KodakFolder(Dataset):
         patches = np.transpose(patches, (0, 1, 3, 2, 4))
 
         return img, patches, (pat_x, pat_y)
+
+    def __len__(self):
+        return len(self.files)
+
+
+class ImagesDataset(Dataset):
+    def __init__(self, root: str, images_index_list=None, x_patch=None, y_patch=None):
+
+        self.root_dir = Path(root)
+        self.x_patch = x_patch
+        self.y_patch = y_patch
+
+        if images_index_list is not None:
+            images_names = [f"image_{k}.png" for k in images_index_list]
+            self.files = [self.root_dir / k for k in images_names]
+        else:
+            self.files = sorted([k for k in self.root_dir.glob("*.png")])
+
+    def __getitem__(self, index: int) -> Tuple[T.Tensor, T.Tensor, str]:
+
+        path = str(self.files[index % len(self.files)])
+        img = to_tensor(Image.open(path))
+
+        patches = T.reshape(img, (3, self.x_patch, 128, self.y_patch, 128))
+        patches = T.permute(patches, (0, 1, 3, 2, 4))
+
+        return patches, path
 
     def __len__(self):
         return len(self.files)
