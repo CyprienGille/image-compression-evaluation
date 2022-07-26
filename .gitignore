@@ -1,5 +1,5 @@
 .vscode
 temp
 __pycache__
-comparision.py
+./comparision.py
 datasets/kodak/image_100.png
