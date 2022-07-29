@@ -37,9 +37,12 @@ def get_data_point(
 
     for idx, data in enumerate(dataloader):
         _, patches, (nb_pat_x, nb_pat_y) = data
+        # put data on GPU if available
         patches = patches.to(DEVICE, non_blocking=True)
 
+        # complete output tensor
         out = torch.zeros(nb_pat_x, nb_pat_y, 3, 128, 128)
+        # tensor to store entropies per patch
         patch_ent = np.zeros((nb_pat_x, nb_pat_y))
 
         # iterate over patches
@@ -71,6 +74,9 @@ def get_data_point(
 
         save_name = f"{save_decoded_dir}Decoded_{idx}_{nbits}bits.png"
         save_image(out, save_name)
+        # this f-string allows to get double digits for all images
+        # ex: kodim01.png
+        # without getting for example kodim015.png
         ref_name = f"kodim{'0'*(idx<9)}{idx+1}.png"
         all_psnrs.append(PSNR(reference_dir + "/" + ref_name, save_name))
         all_ssims.append(SSIM(reference_dir + "/" + ref_name, save_name))
@@ -80,17 +86,19 @@ def get_data_point(
 
 
 if __name__ == "__main__":
-    if os.name != "posix":
+    if os.name != "posix":  # if on windows
         pathlib.PosixPath = pathlib.WindowsPath  # to use models trained on linux
 
     PLOTS_DIR = "./plots/"
     os.makedirs(PLOTS_DIR, exist_ok=True)
 
+    # all models to plot
     all_models = [
         "trainComp_200_0.0_Lightning_initial",
         "trainComp_100_0.0_Flickr_initial",
         "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
     ]
+    # all n_bits for quantization to plot
     quantization_bits = [2, 3, 4, 6, 8, 10, 16]
 
     model_dir = "./trained_models"
@@ -100,12 +108,14 @@ if __name__ == "__main__":
     dataset = KodakFolder(root=img_dir)
     dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 
+    # 2 subplots, 1 for PSNR and 1 for MSSIM
     plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
 
     for model_name in all_models:
         bitrate_points, psnr_points, mssim_points = [], [], []
         model_path = f"{model_dir}/{model_name}/checkpoint/best_model.pth"
         if model_name.find("Lightning") != -1:
+            # Lightning-trained model, re-used here in pure pytorch
             model = LightningCAE()
             model.load_state_dict(
                 torch.load(model_path, map_location=DEVICE)["state_dict"]

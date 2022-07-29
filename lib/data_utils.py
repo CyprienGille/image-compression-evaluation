@@ -10,6 +10,7 @@ from torchvision.transforms.functional import to_tensor
 
 class KodakFolder(Dataset):
     """
+    Kodak CD dataset class
     Image shape is either (768, 512, 3) or (512, 768, 3) --> 6x4 or 4x6 128x128 patches
     """
 
@@ -32,12 +33,12 @@ class KodakFolder(Dataset):
                 f"KodakFolder dataset class expects (768, 512, 3) or (512, 768, 3) images but got {dims}."
             )
 
-        img /= 255
-        img = np.transpose(img, (2, 0, 1))
+        img /= 255  # map to [0,1] range
+        img = np.transpose(img, (2, 0, 1))  # put the channels as the first axis
         img = T.from_numpy(img).float()
 
         patches = np.reshape(img, (3, pat_x, 128, pat_y, 128))
-        patches = np.transpose(patches, (0, 1, 3, 2, 4))
+        patches = np.transpose(patches, (0, 1, 3, 2, 4))  # channels, pat_x, pat_y, w, h
 
         return img, patches, (pat_x, pat_y)
 
@@ -46,6 +47,9 @@ class KodakFolder(Dataset):
 
 
 class ImagesDataset(Dataset):
+    """Reproduction of the ImagesDataset class used for
+    Lightning models"""
+
     def __init__(self, root: str, images_index_list=None, x_patch=None, y_patch=None):
 
         self.root_dir = Path(root)
