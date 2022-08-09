@@ -3,6 +3,9 @@ import torch
 from skimage import io
 from skimage.metrics import structural_similarity as ssim
 import cv2
+from PIL import Image
+import torch
+from torchvision import transforms
 
 
 def tensor_entropy(tensor):
@@ -34,30 +37,16 @@ def get_valid_input(img_ref_path, img_comp_path):
     return yuv1, yuv2
 
 
-def compute_PSNR(yuv1, yuv2):
-    """Computes the PSNR between two images in the YCrCb space"""
-
-    PSNR = 0
-    for k in range(3):  # over all channels
-        diff = yuv2[:, :, k].astype(int) - yuv1[:, :, k].astype(int)
-        mean_squared_error = 0
-        for i in range(len(diff)):
-            for j in range(len(diff[0])):
-                mean_squared_error += diff[i, j] ** 2
-        mean_squared_error /= len(diff)
-        mean_squared_error /= len(diff[0])
-        if k == 0:
-            PSNR += 6 * np.log10((255 ** 2) / mean_squared_error)
-        else:
-            PSNR += 2 * np.log10((255 ** 2) / mean_squared_error)
-    return PSNR
-
-
-def PSNR(img_ref_path, img_comp_path):
-    """Returns the PSNR between two images"""
-    return compute_PSNR(*get_valid_input(img_ref_path, img_comp_path))
-
-
 def SSIM(img_ref_path, img_comp_path):
     """Returns the structural similarity score between two images"""
     return ssim(*get_valid_input(img_ref_path, img_comp_path), channel_axis=-1)
+
+def PSNR(img_ref_path, img_comp_path, max_val: float = 1.0) -> float:
+    im1 = Image.open(img_ref_path)
+    im2 = Image.open(img_comp_path)
+    convert_tensor = transforms.ToTensor()
+    image1 = convert_tensor(im1)
+    image2 = convert_tensor(im2)
+    mse = torch.mean((image1 - image2) ** 2).item()
+    psnr = 20 * np.log10(max_val) - 10 * np.log10(mse)
+    return psnr
