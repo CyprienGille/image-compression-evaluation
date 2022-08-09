@@ -1,18 +1,20 @@
 import pathlib
-from lib.data_utils import KodakFolder
-from lib.measures import PSNR, SSIM, tensor_entropy
-from lib.tensor_utils import quantize_tensor, dequantize_tensor
-from models.cae_32x32x32_zero_pad_comp import CAE
-from models.cae_lightning import LightningCAE
 
 import numpy as np
 import torch
 
+from lib.data_utils import KodakFolder
+from lib.measures import PSNR, SSIM, tensor_entropy
+from lib.tensor_utils import dequantize_tensor, quantize_tensor
+from models.cae_32x32x32_zero_pad_comp import CAE
+from models.cae_lightning import LightningCAE
+
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+import os
+
+import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 from torchvision.utils import save_image
-import matplotlib.pyplot as plt
-import os
 from tqdm import tqdm
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"  # fix OpenMP duplicate issues
