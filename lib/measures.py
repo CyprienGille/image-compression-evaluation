@@ -1,10 +1,9 @@
+import cv2
 import numpy as np
 import torch
+from PIL import Image
 from skimage import io
 from skimage.metrics import structural_similarity as ssim
-import cv2
-from PIL import Image
-import torch
 from torchvision import transforms
 
 
@@ -40,6 +39,7 @@ def get_valid_input(img_ref_path, img_comp_path):
 def SSIM(img_ref_path, img_comp_path):
     """Returns the structural similarity score between two images"""
     return ssim(*get_valid_input(img_ref_path, img_comp_path), channel_axis=-1)
+
 
 def PSNR(img_ref_path, img_comp_path, max_val: float = 1.0) -> float:
     im1 = Image.open(img_ref_path)
