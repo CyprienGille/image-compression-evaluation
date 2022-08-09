@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
     # all models to plot
     all_models = [
-        "trainComp_200_0.0_Lightning_initial",
+        # "trainComp_200_0.0_Lightning_initial",
         "trainComp_100_0.0_Flickr_initial",
         "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
     ]
