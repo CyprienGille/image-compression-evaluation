@@ -99,6 +99,8 @@ if __name__ == "__main__":
         # "trainComp_200_0.0_Lightning_initial",
         "trainComp_100_0.0_Flickr_initial",
         "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
+        "trainComp_100_0.0_decodproj_Flickr_L11_500.0",
+        "trainComp_100_0.0_fullproj_Flickr_L11_800.0",
     ]
     # all n_bits for quantization to plot
     quantization_bits = [2, 3, 4, 6, 8, 10, 16]
