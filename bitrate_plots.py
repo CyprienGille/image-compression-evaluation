@@ -98,9 +98,9 @@ if __name__ == "__main__":
     all_models = [
         # "trainComp_200_0.0_Lightning_initial",
         "trainComp_100_0.0_Flickr_initial",
-        "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
-        "trainComp_100_0.0_decodproj_Flickr_L11_500.0",
-        "trainComp_100_0.0_fullproj_Flickr_L11_800.0",
+        # "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
+        # "trainComp_100_0.0_decodproj_Flickr_L11_500.0",
+        # "trainComp_100_0.0_fullproj_Flickr_L11_800.0",
     ]
     # all n_bits for quantization to plot
     quantization_bits = [2, 3, 4, 6, 8, 10, 16]
@@ -142,6 +142,8 @@ if __name__ == "__main__":
 
         plt.subplot(1, 2, 1)
         plt.plot(bitrate_points, psnr_points, label=model_name, marker="x")
+        # print(bitrate_points)
+        # print(psnr_points)
         plt.subplot(1, 2, 2)
         plt.plot(bitrate_points, mssim_points, label=model_name, marker="x")
 

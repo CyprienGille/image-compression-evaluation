@@ -1,10 +1,9 @@
+import math
+
 import cv2
-import numpy as np
 import torch
-from PIL import Image
 from skimage import io
 from skimage.metrics import structural_similarity as ssim
-from torchvision import transforms
 
 
 def tensor_entropy(tensor):
@@ -41,12 +40,6 @@ def SSIM(img_ref_path, img_comp_path):
     return ssim(*get_valid_input(img_ref_path, img_comp_path), channel_axis=-1)
 
 
-def PSNR(img_ref_path, img_comp_path, max_val: float = 1.0) -> float:
-    im1 = Image.open(img_ref_path)
-    im2 = Image.open(img_comp_path)
-    convert_tensor = transforms.ToTensor()
-    image1 = convert_tensor(im1)
-    image2 = convert_tensor(im2)
-    mse = torch.mean((image1 - image2) ** 2).item()
-    psnr = 20 * np.log10(max_val) - 10 * np.log10(mse)
-    return psnr
+def PSNR(img_ref_path, img_comp_path) -> float:
+    return cv2.PSNR(*get_valid_input(img_ref_path, img_comp_path))
+
