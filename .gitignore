@@ -3,3 +3,4 @@ temp
 __pycache__
 ./comparision.py
 imgs
+plots/
