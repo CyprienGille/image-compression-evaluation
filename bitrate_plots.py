@@ -2,6 +2,7 @@ import pathlib
 
 import numpy as np
 import torch
+import pandas as pd
 
 from lib.data_utils import KodakFolder
 from lib.measures import PSNR, SSIM, tensor_entropy
@@ -98,7 +99,7 @@ if __name__ == "__main__":
     all_models = [
         # "trainComp_200_0.0_Lightning_initial",
         "trainComp_100_0.0_Flickr_initial",
-        # "trainComp_200_0.0_halfprojNB_Flickr_L11_500.0",
+        "trainComp_200_0.0_halfprojNB_Flickr_L11_800.0",
         # "trainComp_100_0.0_decodproj_Flickr_L11_500.0",
         # "trainComp_100_0.0_fullproj_Flickr_L11_800.0",
     ]
@@ -107,6 +108,10 @@ if __name__ == "__main__":
 
     model_dir = "./trained_models"
     img_dir = "./datasets/kodak"
+
+    bpp_df = pd.DataFrame(columns=all_models, index=quantization_bits)
+    psnr_df = pd.DataFrame(columns=all_models, index=quantization_bits)
+    ssim_df = pd.DataFrame(columns=all_models, index=quantization_bits)
 
     # Prepare data
     dataset = KodakFolder(root=img_dir)
@@ -140,12 +145,18 @@ if __name__ == "__main__":
             psnr_points.append(psnr)
             mssim_points.append(mssim)
 
+        bpp_df[model_name] = bitrate_points
+        psnr_df[model_name] = psnr_points
+        ssim_df[model_name] = mssim_points
+
         plt.subplot(1, 2, 1)
         plt.plot(bitrate_points, psnr_points, label=model_name, marker="x")
-        # print(bitrate_points)
-        # print(psnr_points)
         plt.subplot(1, 2, 2)
         plt.plot(bitrate_points, mssim_points, label=model_name, marker="x")
+
+        # print(bitrate_points)
+        # print(psnr_points)
+        # print(mssim_points)
 
     plt.subplot(1, 2, 1)
     plt.xlabel("Bitrate (bpp)")
@@ -159,3 +170,6 @@ if __name__ == "__main__":
     )
     plt.show()
 
+    bpp_df.to_csv("results_bpp.csv", index_label="Bits")
+    psnr_df.to_csv("results_psnr.csv", index_label="Bits")
+    ssim_df.to_csv("results_ssim.csv", index_label="Bits")
